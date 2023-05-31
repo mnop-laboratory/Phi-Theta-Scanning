@@ -26,7 +26,7 @@ def savedata(points, data):
     np.savetxt(pointsfilex,pointsx)
     np.savetxt(pointsfiley,pointsy)
     datafile = open(r"C:\Users\mnopl\OneDrive\Desktop\DataV2.txt","w", encoding='utf8')
-    np.savetxt(datafile,data,encoding='utf8')
+    np.savetxt(datafile,data,fmt='%g' ,encoding='utf8')
     pointsfilex.close()
     pointsfiley.close()
     datafile.close()

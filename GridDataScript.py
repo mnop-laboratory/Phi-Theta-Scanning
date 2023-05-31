@@ -11,8 +11,10 @@ from scipy.interpolate import griddata
 import math 
 import matplotlib.pyplot as plt
 
-def grid(points, data):
-    
+
+
+def grid(points, data, grid_points):
+    global min_theta, max_theta, min_phi, max_phi
 
     #grid_x, grid_y = np.mgrid[0:math.pi:30j, 0:2* math.pi:30j]
     points = np.array(points)
@@ -60,29 +62,35 @@ def grid(points, data):
             #points_anglesb[j+(i*shapes[1])] = math.atan(points[i,j,1]/15) 
             
             #theta
+            #points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
+            #(retyped them in case they were wrong??)
             points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
+            
             #phi
-            points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(sin(math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2))))*(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))) 
+            #points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(sin(math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2))))*(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))) 
+            #(retyped them in case they were wrong??)
+            points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(sin(points_anglesa[j+(i*points_shapes[1])])*math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
             
             
-    for i in range(data_shapes[0]) :
+            
+    for i in range(data_shapes[0]) :    
         for j in range(data_shapes[1]):
             data_angles[j+(i*data_shapes[1])] = data[i,j]
     for i in range(size(points_anglesa)) :
         points_angles[i,0] = points_anglesa[i]
         points_angles[i,1] = points_anglesb[i]
     
-    global min_theta, max_theta, min_phi, max_phi, grid_points
     
     min_theta = min(points_anglesa)
     max_theta = max(points_anglesa)
+    #print(max_theta)
     
     min_phi = min(points_anglesb)
     max_phi = max(points_anglesb)
     
-    #grid_points = 3000j
+    grid_points = complex(0,grid_points)
     
-    grid_x, grid_y = np.mgrid[min_theta:max_theta:3000j, min_phi:max_phi:3000j]
+    grid_x, grid_y = np.mgrid[min_theta:max_theta:grid_points, min_phi:max_phi:grid_points]
     
     #print("angled data")
     #print(points_angles)
@@ -108,7 +116,7 @@ def test():
     print(points)
     print(data)        
     #gridz = grid(array([[[1,1],[2,1],[3,1]],[[1,2],[2,2],[3,2]],[[1,3],[2,3],[3,3]]]), array([[2,10,1],[2,9,3],[4,8,3]]))
-    gridz = grid(points,data)
+    gridz = grid(points,data,3000)
     plt.imshow(gridz)
     #plt.imshow(data)
     return (gridz)
@@ -116,7 +124,7 @@ def test():
 def ntest():
     pointsfilex = open(r"C:\Users\mnopl\OneDrive\Desktop\PointsX.txt","r")
     pointsfiley = open(r"C:\Users\mnopl\OneDrive\Desktop\PointsY.txt","r")
-    datafile = open(r"C:\Users\mnopl\OneDrive\Desktop\Data.txt","r")
+    datafile = open(r"C:\Users\mnopl\OneDrive\Desktop\DataV2.txt","r")
     pointsx = np.loadtxt(pointsfilex)
     pointsy = np.loadtxt(pointsfiley)
     shapesy = pointsx.shape
@@ -127,10 +135,10 @@ def ntest():
             points[i,j,1] = pointsy[i,j]
     data = np.loadtxt(datafile)
     print("points")
-    print(points)
+    print(points.shape)
     print("Data")
-    print(data)
-    gridz = grid(points,data)
+    print(data.shape)
+    gridz = grid(points,data,3000)
     print("gridded data")
     print(gridz)
     plt.imshow(gridz)
@@ -139,20 +147,15 @@ def ntest():
     datafile.close()
     return()
     
-def OffsetAndMult():
+def OffsetAndMult(grid_points):
     offset_theta = min_theta
     offset_phi = min_phi
     
     theta_range = max_theta - min_theta
     phi_range = max_phi - min_phi
     
-    theta_mult = theta_range/3000
-    phi_mult = phi_range/3000
+    theta_mult = theta_range/grid_points
+    phi_mult = phi_range/grid_points
     
     info = [offset_theta, theta_mult, offset_phi, phi_mult]
     return(info)
-# In[ ]:
-
-
-test()
-
