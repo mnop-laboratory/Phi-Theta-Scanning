@@ -43,9 +43,46 @@ def grid(points, data, grid_points):
     #print(data.shape)
     #print("Angled data Size")
     #print(data_angles.shape)
-    
+    temp = 0
     for i in range(points_shapes[0]) :
         for j in range(points_shapes[1]) :
+            
+            pf = 7.5    #parent focal length
+            ef = 15     #effective focal length
+            cf = (ef)**2/(pf)
+            
+            #cf = 1
+            
+            b = points[i,j,1]
+            a = points[i,j,0]
+            
+            x = a-15
+            y = b
+            ########
+            #change so that phi is now phi'
+            #temp = x
+            #y=temp
+            #x=y
+            #change so that phi is now phi'
+            ########
+            z = -pf+(x**2+y**2)/(cf)
+            ########
+            #change so that phi is now phi'
+            #z=-z
+            #change so that phi is now phi'
+            ########
+            p = math.sqrt(x**2+y**2+z**2)
+            
+            
+            
+            
+            
+            #theta
+            points_anglesa[j+(i*points_shapes[1])] = math.acos(y/p)
+            
+            #phi
+            points_anglesb[j+(i*points_shapes[1])] = math.asin((z/p)*(1/(sin(points_anglesa[j+(i*points_shapes[1])]))))
+            
             
             #points_anglesa[j+(i*shapes[1])] = math.atan((points[i,j,0]+15)**2/(30+points[i,j,0]))
             #points_anglesb[j+(i*shapes[1])] = math.atan((points[i,j,1])/(15-points[i,j,0]))
@@ -63,16 +100,24 @@ def grid(points, data, grid_points):
             
             #theta
             #points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
-            #(retyped them in case they were wrong??)
-            points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
+            #(retyped them ADDING IN PARABOLIC CORRECTION FACTOR)
+ #           points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+((points[i,j,0]-15)**2+points[i,j,1]**2))*(1/30)**2)))
+            #small angle approximation
+            #points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
+            
+            
+            
             
             #phi
             #points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(sin(math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2))))*(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))) 
-            #(retyped them in case they were wrong??)
-            points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(sin(points_anglesa[j+(i*points_shapes[1])])*math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
+            #(retyped them ADDING IN PARABOLIC CORRECTION FACTOR)
+  #          points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(sin(points_anglesa[j+(i*points_shapes[1])])*math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+((points[i,j,0]-15)**2+points[i,j,1]**2)*(1/30))**2)))
+            #small angle approximation 
+            #points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(points_anglesa[j+(i*points_shapes[1])]*math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
             
             
-            
+    print("Phi")
+    print(points_anglesb)
     for i in range(data_shapes[0]) :    
         for j in range(data_shapes[1]):
             data_angles[j+(i*data_shapes[1])] = data[i,j]
@@ -122,18 +167,44 @@ def test():
     return (gridz)
 
 def ntest():
-    pointsfilex = open(r"C:\Users\mnopl\OneDrive\Desktop\PointsX.txt","r")
-    pointsfiley = open(r"C:\Users\mnopl\OneDrive\Desktop\PointsY.txt","r")
-    datafile = open(r"C:\Users\mnopl\OneDrive\Desktop\DataV2.txt","r")
+    pointsfilex = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f5_6-13-2023 Big Scan LHS afm calibration_PointsX","r")
+    pointsfiley = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f5_6-13-2023 Big Scan LHS afm calibration_PointsY","r")
+    datafile = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f5_6-13-2023 Big Scan LHS afm calibration_Data","r")
+    
+    
     pointsx = np.loadtxt(pointsfilex)
     pointsy = np.loadtxt(pointsfiley)
-    shapesy = pointsx.shape
+    
+    print(pointsx)
+    shapesy = pointsy.shape
     points = np.zeros((shapesy[0],shapesy[1],2))
+    
+    points_positive = np.zeros((shapesy[0],shapesy[1],2))
+    points_negative = np.zeros((shapesy[0],shapesy[1],2))
+    
+    data_pos = np.zeros((shapesy[0],shapesy[1]))
+    data_neg = np.zeros((shapesy[0],shapesy[1]))
+    
+    data = np.loadtxt(datafile)
+    
     for i in range(shapesy[0]):
+        u = 0
+        k = 0
         for j in range(shapesy[1]):
             points[i,j,0] = pointsx[i,j]
             points[i,j,1] = pointsy[i,j]
-    data = np.loadtxt(datafile)
+            if pointsx[i,j] < 0 :
+                points_negative[i,j,0] = pointsx[i,j]
+                points_negative[i,j,1] = pointsy[i,j]
+                data_pos[i,u] = data[i,j]
+                u = u+1
+            else :
+                points_positive[i,j,0] = pointsx[i,j]
+                points_positive[i,j,1] = pointsy[i,j]
+                data_neg[i,k] = data[i,j]
+                k = k+1
+                
+    
     print("points")
     print(points.shape)
     print("Data")
@@ -141,10 +212,34 @@ def ntest():
     gridz = grid(points,data,3000)
     print("gridded data")
     print(gridz)
-    plt.imshow(gridz)
+    #plt.imshow(data)
     pointsfilex.close()
     pointsfiley.close()
     datafile.close()
+    
+    print("POINTS POSITIVE")
+    print(points_negative)
+    print("POINTS NEGATIVE")
+    print(points_positive)
+    print('POINTS')
+    print(points)
+    
+    plt.imshow(gridz)
+    #fig, ((ax1,ax2),(ax3,ax4)) = plt.subplots(nrows=2, ncols=2)
+    
+    #grid_pos = grid(points_positive, data_pos, 3000)
+    #grid_neg = grid(points_negative, data_neg, 3000)
+    #ax1.imshow(data)
+    #ax1.set_title("Data")
+    #ax2.imshow(gridz)
+    #ax2.set_title("Full Data Set")
+    #ax3.imshow(grid_neg)
+    #ax3.set_title("Positive Data")
+    #ax4.imshow(grid_pos)
+    #ax1.axes.get_xaxis().set_visible(False)
+    #ax2.axes.get_xaxis().set_visible(False)
+    #ax4.set_title("Negative Data")
+    #plt.show()
     return()
     
 def OffsetAndMult(grid_points):
