@@ -953,6 +953,7 @@
 			<Item Name="Xceed.Wpf.Toolkit.dll" Type="Document" URL="../Xceed.Wpf.Toolkit.dll"/>
 		</Item>
 		<Item Name="Phi Theta Scanning Revamped.vi" Type="VI" URL="../Phi Theta Scanning Revamped.vi"/>
+		<Item Name="temp.ctl" Type="VI" URL="../../Images (Hayden-Devon)/6_8_2023/Angular/temp.ctl"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="vi.lib" Type="Folder">
 				<Item Name="DAQmx Read.vi" Type="VI" URL="/&lt;vilib&gt;/DAQmx/read.llb/DAQmx Read.vi"/>
