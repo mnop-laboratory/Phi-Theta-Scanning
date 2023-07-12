@@ -727,6 +727,9 @@
 				<Item Name="ThorlabsDefaultSettings.xml" Type="Document" URL="../Thorlabs Drivers Misc/ThorlabsDefaultSettings.xml"/>
 				<Item Name="Xceed.Wpf.Toolkit.dll" Type="Document" URL="../Thorlabs Drivers Misc/Xceed.Wpf.Toolkit.dll"/>
 			</Item>
+			<Item Name="Action Engine" Type="Folder" URL="../Action Engine">
+				<Property Name="NI.DISK" Type="Bool">true</Property>
+			</Item>
 			<Item Name="DAQ Interface.vi" Type="VI" URL="../DAQ Interface.vi"/>
 			<Item Name="GridDataPython.py" Type="Document" URL="../GridDataPython.py"/>
 			<Item Name="Measure and Update Array.vi" Type="VI" URL="../Measure and Update Array.vi"/>
