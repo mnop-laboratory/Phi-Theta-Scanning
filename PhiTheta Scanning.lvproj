@@ -957,6 +957,7 @@
 		</Item>
 		<Item Name="Phi Theta Scanning Revamped.vi" Type="VI" URL="../Phi Theta Scanning Revamped.vi"/>
 		<Item Name="temp.ctl" Type="VI" URL="../../Images (Hayden-Devon)/6_8_2023/Angular/temp.ctl"/>
+		<Item Name="Initialize DAQ Assistant (duel input).vi" Type="VI" URL="../../Micronix Scanning/Initialize DAQ Assistant (duel input).vi"/>
 		<Item Name="Dependencies" Type="Dependencies">
 			<Item Name="vi.lib" Type="Folder">
 				<Item Name="DAQmx Read.vi" Type="VI" URL="/&lt;vilib&gt;/DAQmx/read.llb/DAQmx Read.vi"/>

@@ -43,13 +43,16 @@ def grid(points, data, grid_points):
     #print(data.shape)
     #print("Angled data Size")
     #print(data_angles.shape)
-    temp = 0
+    #temp = 0
     for i in range(points_shapes[0]) :
         for j in range(points_shapes[1]) :
             
             pf = 7.5    #parent focal length
             ef = 15     #effective focal length
-            cf = (ef)**2/(pf)
+            
+            #tf = (pf)**2/(ef)      #test factor
+            
+            cf = (ef)**2/(pf)       #have been using this one
             
             #cf = 1
             
@@ -65,7 +68,7 @@ def grid(points, data, grid_points):
             #x=y
             #change so that phi is now phi'
             ########
-            z = -pf+(x**2+y**2)/(cf)
+            z = -pf+(x**2+y**2)/(cf)        #was cf instead of tf
             ########
             #change so that phi is now phi'
             #z=-z
@@ -73,15 +76,11 @@ def grid(points, data, grid_points):
             ########
             p = math.sqrt(x**2+y**2+z**2)
             
-            
-            
-            
-            
             #theta
             points_anglesa[j+(i*points_shapes[1])] = math.acos(y/p)
             
             #phi
-            points_anglesb[j+(i*points_shapes[1])] = math.asin((z/p)*(1/(sin(points_anglesa[j+(i*points_shapes[1])]))))
+            points_anglesb[j+(i*points_shapes[1])] = math.asin((z/p)*(1/(math.sin(points_anglesa[j+(i*points_shapes[1])]))))
             
             
             #points_anglesa[j+(i*shapes[1])] = math.atan((points[i,j,0]+15)**2/(30+points[i,j,0]))
@@ -104,10 +103,7 @@ def grid(points, data, grid_points):
  #           points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+((points[i,j,0]-15)**2+points[i,j,1]**2))*(1/30)**2)))
             #small angle approximation
             #points_anglesa[j+(i*points_shapes[1])] = math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))
-            
-            
-            
-            
+             
             #phi
             #points_anglesb[j+(i*points_shapes[1])] = math.acos(-(points[i,j,0]-15)/(sin(math.acos((points[i,j,1])/(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2))))*(math.sqrt((points[i,j,0]-15)**2+points[i,j,1]**2+(-7.5+(points[i,j,0]-15)**2+points[i,j,1]**2)**2)))) 
             #(retyped them ADDING IN PARABOLIC CORRECTION FACTOR)
@@ -121,7 +117,7 @@ def grid(points, data, grid_points):
     for i in range(data_shapes[0]) :    
         for j in range(data_shapes[1]):
             data_angles[j+(i*data_shapes[1])] = data[i,j]
-    for i in range(size(points_anglesa)) :
+    for i in range(np.size(points_anglesa)) :
         points_angles[i,0] = points_anglesa[i]
         points_angles[i,1] = points_anglesb[i]
     
@@ -141,7 +137,7 @@ def grid(points, data, grid_points):
     #print(points_angles)
     #print("data angles")
     #print(data_angles)
-    grided = griddata(points_angles, data_angles, (grid_x, grid_y), method='linear',fill_value=NaN)
+    grided = griddata(points_angles, data_angles, (grid_x, grid_y), method='linear',fill_value=np.NaN)
     # 'nearest', 'cubic', or 'linear'
 
     return grided
@@ -167,9 +163,10 @@ def test():
     return (gridz)
 
 def ntest():
-    pointsfilex = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f5_6-13-2023 Big Scan LHS afm calibration_PointsX","r")
-    pointsfiley = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f5_6-13-2023 Big Scan LHS afm calibration_PointsY","r")
-    datafile = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f5_6-13-2023 Big Scan LHS afm calibration_Data","r")
+    pointsfilex = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f7-27-23_diode_tip_PointsX","r")
+    pointsfiley = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f7-27-23_diode_tip_PointsY","r")
+    datafile = open(r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f7-27-23_diode_tip_Data","r")
+    
     
     
     pointsx = np.loadtxt(pointsfilex)
@@ -207,6 +204,7 @@ def ntest():
     
     print("points")
     print(points.shape)
+    print(points)
     print("Data")
     print(data.shape)
     gridz = grid(points,data,3000)

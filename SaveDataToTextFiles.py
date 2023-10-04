@@ -22,11 +22,17 @@ def savedata(points, data, textname):
             pointsx[i,j] = points[i,j,0]
             pointsy[i,j] = points[i,j,1]
     
+    #filenamepoints = r'C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f' + textname + '_PointsX&Y'
+    
     filenamex = r'C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f' + textname + '_PointsX'
     filenamey = r"C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f" + textname + "_PointsY"
     filenamedata = r'C:\Users\mnopl\OneDrive\Documents\Images (Hayden-Devon)\RawData\f' + textname + '_Data'
     pointsfilex = open(filenamex,"w")
     pointsfiley = open(filenamey,"w")
+    
+    #pointsfile = open(filenamepoints,"w")
+    #np.savetxt(pointsfile,points)
+    
     np.savetxt(pointsfilex,pointsx)
     np.savetxt(pointsfiley,pointsy)
     datafile = open(filenamedata,"w", encoding='utf8')
@@ -34,5 +40,8 @@ def savedata(points, data, textname):
     pointsfilex.close()
     pointsfiley.close()
     datafile.close()
+    
+    #pointsfile.close()
+    
     return(data) 
     
